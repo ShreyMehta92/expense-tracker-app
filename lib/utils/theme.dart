@@ -8,9 +8,6 @@ class AppTheme {
   // ─── Brand Colors ─────────────────────────────────────────
   static const Color _primaryLight = Color(0xFF6C63FF);
   static const Color _primaryDark = Color(0xFF7C74FF);
-  static const Color _secondaryLight = Color(0xFF03DAC6);
-  static const Color _secondaryDark = Color(0xFF03DAC6);
-  static const Color _errorColor = Color(0xFFCF6679);
   static const Color _surfaceDark = Color(0xFF1E1E2C);
   static const Color _backgroundDark = Color(0xFF121220);
   static const Color _cardDark = Color(0xFF252540);

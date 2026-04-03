@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../providers/expense_provider.dart';
-import '../providers/budget_provider.dart';
+import '../utils/constants.dart';
 import '../utils/constants.dart';
 import '../services/hive_service.dart';
 import '../widgets/summary_card.dart';
@@ -14,7 +14,6 @@ class AnalyticsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final expProvider = context.watch<ExpenseProvider>();
-    final budgetProvider = context.watch<BudgetProvider>();
     final categorySpending = expProvider.categoryWiseSpending;
     final monthlyTrend = expProvider.monthlyTrend;
     final currency = HiveService.currency;

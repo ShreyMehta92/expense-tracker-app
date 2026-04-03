@@ -42,6 +42,7 @@ class _BudgetScreenState extends State<BudgetScreen> {
     }
 
     await HiveService.setCurrency(_selectedCurrency);
+    if (!mounted) return;
     await context.read<BudgetProvider>().setMonthlyLimit(value);
 
     if (mounted) {
