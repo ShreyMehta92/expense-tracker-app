@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../models/budget.dart';
 import '../services/hive_service.dart';
+import '../services/firebase_service.dart';
 
 /// Provider for managing budget state
 class BudgetProvider extends ChangeNotifier {
@@ -35,6 +36,11 @@ class BudgetProvider extends ChangeNotifier {
       await HiveService.setBudget(_currentBudget!);
     }
     notifyListeners();
+
+    // Sync to Firestore
+    try {
+      await FirebaseService.syncBudgetToCloud(_currentBudget!.toMap());
+    } catch (_) {}
   }
 
   /// Update the spent amount (called whenever expenses change)
@@ -51,6 +57,11 @@ class BudgetProvider extends ChangeNotifier {
       await HiveService.setBudget(_currentBudget!);
     }
     notifyListeners();
+
+    // Sync to Firestore
+    try {
+      await FirebaseService.syncBudgetToCloud(_currentBudget!.toMap());
+    } catch (_) {}
   }
 
   /// Check if budget alert should be shown

@@ -3,6 +3,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import '../models/expense.dart';
 import '../services/hive_service.dart';
+import '../services/firebase_service.dart';
 
 /// Provider for managing expenses state and CRUD operations
 class ExpenseProvider extends ChangeNotifier {
@@ -110,7 +111,7 @@ class ExpenseProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// Add a new expense
+  /// Add a new expense (saves to Hive + syncs to Firestore)
   Future<void> addExpense({
     required double amount,
     required String category,
@@ -127,9 +128,16 @@ class ExpenseProvider extends ChangeNotifier {
     await HiveService.addExpense(expense);
     _expenses.add(expense);
     notifyListeners();
+
+    // Sync to Firestore in background
+    try {
+      await FirebaseService.syncExpensesToCloud([expense.toMap()]);
+    } catch (_) {
+      // Offline — will sync later
+    }
   }
 
-  /// Update an existing expense
+  /// Update an existing expense (Hive + Firestore)
   Future<void> updateExpense(Expense expense) async {
     await HiveService.updateExpense(expense);
     final index = _expenses.indexWhere((e) => e.id == expense.id);
@@ -137,13 +145,23 @@ class ExpenseProvider extends ChangeNotifier {
       _expenses[index] = expense;
       notifyListeners();
     }
+
+    // Sync update to Firestore
+    try {
+      await FirebaseService.syncExpensesToCloud([expense.toMap()]);
+    } catch (_) {}
   }
 
-  /// Delete an expense
+  /// Delete an expense (Hive + Firestore)
   Future<void> deleteExpense(String id) async {
     await HiveService.deleteExpense(id);
     _expenses.removeWhere((e) => e.id == id);
     notifyListeners();
+
+    // Delete from Firestore
+    try {
+      await FirebaseService.deleteExpenseFromCloud(id);
+    } catch (_) {}
   }
 
   /// Set search query
