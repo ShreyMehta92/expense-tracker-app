@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
 import '../providers/expense_provider.dart';
 import '../utils/constants.dart';
-import '../utils/constants.dart';
 import '../services/hive_service.dart';
 import '../widgets/summary_card.dart';
 
